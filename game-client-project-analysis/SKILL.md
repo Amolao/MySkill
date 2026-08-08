@@ -1,141 +1,193 @@
 ---
 name: game-client-project-analysis
-description: Quickly onboard developers to unfamiliar game-client repositories by finding how to run them, the essential architecture, key files, and one feature path. Use with newly cloned open-source or inherited company projects, especially Unity/C# and Cocos Creator/TypeScript, before making the first safe change.
+description: Explain unfamiliar game-engine client projects through their game type, plugins, Scene relationships, framework systems, common APIs, and reusable script components. Use when onboarding to Unity/C# or Cocos Creator/TypeScript projects to understand how gameplay code is organized and how project components are used.
 ---
 
-# Game Client Project Onboarding
+# Game Client Project Familiarization
 
 ## Goal
 
-Build the smallest accurate mental model that lets a developer start useful work in an unfamiliar game-client repository. Optimize for time-to-first-change, not architectural completeness.
+Build a practical mental model of a game running inside its engine. Focus on the game's identity, Scene structure, runtime systems, framework code, and reusable script components. Do not treat the repository like a web, backend, CLI, or generic application project.
 
-Stop when the developer can answer:
+Enable a new game-client developer to answer:
 
-- How do I open, run, build, and verify the project?
-- Where does execution start, and what is the short startup path?
-- Which 3–6 modules matter first?
-- Which 5–10 files should I read now?
-- How does one representative feature work end to end?
-- Where would my first task likely change code, and how would I verify it?
+- What kind of game is this: 2D or 3D, and what genre or gameplay loop does it implement?
+- Which plugins or frameworks does it actually use, and what role does each play here?
+- Which Scenes exist, what does each Scene do, and how do they transition or depend on one another?
+- Which runtime systems form the client framework, and which methods are used most often?
+- Which script components are important and reusable, how are they used, and in which gameplay situations or Scenes are they needed?
 
-## Scope
+## Boundaries
 
-Start from the user's goal. When a concrete task is supplied, organize onboarding around that task and the nearest existing implementation. Otherwise choose one representative path that reveals the project structure.
+Explore and explain the project as it exists. Do not provide open, run, build, deployment, CI, or test instructions in the default guide. Do not modify code unless the user separately asks for implementation.
 
-Explore read-only by default. Do not edit code merely because the user asked to understand or onboard to the project. When the user explicitly asks to implement a task, use the onboarding findings to proceed without repeating a repository-wide analysis.
-
-Avoid exhaustive architecture audits, generic framework tutorials, code-quality reviews, redesign advice, and file-by-file inventories. Expand only when missing context blocks the next development step.
+Analyze only systems, plugins, Scenes, and component relationships supported by project evidence. Do not fill a checklist with systems the game does not contain. Mark uncertain genre, runtime wiring, or serialized references instead of guessing.
 
 ## Workflow
 
-### 1. Establish the Project Baseline
+### 1. Identify the Game
 
-Scan the root, README, contribution notes, manifests, lockfiles, project settings, build scripts, CI, and top-level source layout. Prefer `rg --files` and targeted `rg` searches; skip generated, build, cache, and vendor-heavy directories.
+Inspect project documentation, engine configuration, Scene names and contents, gameplay scripts, rendering components, physics usage, art assets, and feature terminology. Summarize:
 
-Identify:
+- engine and engine version;
+- 2D, 3D, or hybrid presentation, with evidence;
+- likely genre such as RPG, card, shooter, strategy, simulation, puzzle, platformer, or mixed genre;
+- the core gameplay loop visible in the project;
+- online/offline, single-player/multiplayer, and hot-update characteristics only when evidenced.
 
-- engine, engine version, language, major dependencies, and repository shape;
-- required editor or toolchain version;
-- documented open, setup, run, build, and test commands;
-- generated code, vendored code, submodules, large assets, and local configuration that should not be edited casually;
-- current blockers such as missing documentation, dependencies, secrets, assets, or platform tooling.
+Label the genre `INFERRED` when it comes from code and asset patterns rather than explicit project documentation.
 
-Do not run dependency installers or untrusted repository scripts solely for orientation. If the user asked to set up or run the project, inspect the command first, explain material side effects, and execute only within that authority.
+Discover plugins through manifests, packages, DLLs, plugin directories, assembly references, imports, initialization code, and call sites. For every relevant plugin, explain:
 
-For Unity, prioritize `ProjectSettings/ProjectVersion.txt`, `Packages/manifest.json`, `EditorBuildSettings.asset`, assembly definitions, the first enabled Scene, bootstrap code, and `RuntimeInitializeOnLoadMethod` or root `MonoBehaviour` hooks.
+- what capability it provides to this game;
+- where it is initialized or configured;
+- which project systems use it;
+- whether it is merely present or demonstrably used at runtime.
 
-For Cocos Creator, prioritize `package.json`, `tsconfig.json`, project/settings files, the startup Scene, bootstrap `Component`, `onLoad`/`start`, and relevant `.scene`, `.prefab`, and `.meta` links. Mark unresolved serialized references `UNKNOWN / NEED EDITOR INSPECTION`.
+Do not give a generic plugin tutorial. Explain its role in this project.
 
-For other game clients, find the equivalent version manifest, build entry, scene/state root, lifecycle hooks, and asset pipeline.
+For Unity, inspect `ProjectVersion.txt`, `Packages/manifest.json`, `*.asmdef`, `Assets/Plugins`, package-specific settings, and real API calls. Recognize dependencies such as Addressables, YooAsset, UniTask, DOTween, Zenject/VContainer, UniRx/R3, Cinemachine, Input System, HybridCLR, ILRuntime, Lua, Odin, MessagePipe, and DOTS only when present.
 
-### 2. Build the Minimum Architecture Map
+For Cocos Creator, inspect `package.json`, project/settings files, extensions, asset bundles, native plugins, imports, and real API calls.
 
-Trace only the critical spine:
+### 2. Map the Scenes
 
-`Engine Entry -> Bootstrap/Composition Root -> Core Services -> First Main State or Target Feature`
+Enumerate project-owned runtime Scenes from engine configuration, Scene assets, loading calls, address/bundle configuration, and transition controllers. Exclude editor samples, plugin demos, tests, and abandoned Scenes unless the project uses them.
 
-Identify 3–6 modules from responsibility, public API, initialization, and dependency boundaries rather than folder names. For each, capture one sentence of responsibility, its entry file or type, and its main dependencies.
+For each Scene, determine:
 
-Create one Mermaid diagram with no more than about 10 nodes. Use real project symbols. Label direct calls, DI, events, async responses, engine lifecycle, or serialized connections only where the distinction helps the developer act.
+- purpose in the game: bootstrap, login, lobby, world, battle, loading, character selection, or another evidenced role;
+- root objects/nodes and the scripts that establish the Scene;
+- how the Scene is entered and what it can transition to;
+- systems or persistent objects it expects to exist;
+- important Scene-owned UI, entities, cameras, or controllers;
+- what is destroyed, retained, or carried across the transition.
 
-### 3. Follow One Real Feature
+Produce a Mermaid Scene flow. Use actual Scene names and label transition triggers when known.
 
-When the user has a task, find the closest existing feature and trace that path. Otherwise select one path that crosses useful layers, such as startup to main UI, opening a screen, loading an asset, or completing a network-backed action.
+For Unity, inspect `EditorBuildSettings.asset`, `*.unity`, `SceneManager` calls, Addressable or asset-bundle Scene loads, bootstrap hooks, and `DontDestroyOnLoad` objects.
+
+For Cocos Creator, inspect the startup Scene setting, `*.scene`, `director.loadScene`, bundles, persistent nodes, and `.meta` UUID links.
+
+If text cannot prove a serialized Scene/Prefab reference, mark it `UNKNOWN / NEED EDITOR INSPECTION`.
+
+### 3. Map the Game Systems
+
+Identify cohesive runtime systems from initialization, ownership, public APIs, dependencies, and repeated use. A folder or a class ending in `Manager` is not sufficient evidence by itself.
+
+Check for systems such as UI, Scene/state, resource/asset, object pool, FSM/state machine, entity, battle, skill, input, camera, animation, audio, event/message, network, configuration, player data, save, timer/tick, SDK/platform, and hot update. Report only those that exist.
+
+For each important system, explain:
+
+- responsibility in this game;
+- key files and central types;
+- who creates, initializes, or owns it;
+- which Scenes and gameplay features use it;
+- how other code communicates with it: direct call, DI, event, callback, engine lifecycle, or serialized component link;
+- 3–8 frequently used public methods, based on real call sites;
+- lifecycle, cleanup, resource release, or registration rules that developers must know.
+
+Give extra attention to these common game-framework systems when present:
+
+- **UI:** identify view/panel registration, `Open`/`Show`, `Close`/`Hide`, parameter passing, layers, UI prefab loading, and release. Trace one real UI opening call.
+- **Object pool:** identify preload, `Spawn`/`Get`, `Despawn`/`Recycle`/`Release`, clearing, pool ownership, and the entity/effect/projectile types that use it.
+- **FSM/state machine:** identify state registration, `Enter`, `ChangeState`, `Update/Tick`, `Exit`, transition conditions, state owner, and the gameplay object controlled by the machine.
+- **Scene system:** identify Scene registration/loading/switching and how framework services survive or reset between Scenes.
+- **Resource system:** identify load, cache/reference, instantiate, unload/release, and ownership rules.
+- **Event system:** identify subscribe, publish/dispatch, unsubscribe, listener lifetime, and representative publishers/subscribers.
+
+Prefer methods that feature code calls repeatedly. Do not list every public method or infer usage from method names alone.
+
+### 4. Explain Important Script Components
+
+Find components that are attached to important Scene objects/Nodes or Prefabs, reused by multiple features, control engine lifecycle, or expose common gameplay behavior.
+
+For each important component, explain:
+
+- script path and engine base type;
+- what GameObject/Node/Prefab or Scene normally owns it;
+- what gameplay problem it solves;
+- when a developer should use it and when it is not needed;
+- how to attach, obtain, configure, or call it according to existing project examples;
+- important serialized properties or `@property` fields;
+- commonly called methods, events, or callbacks;
+- initialization and lifecycle order;
+- required systems, sibling components, assets, or data;
+- one real usage location.
+
+For Unity, prioritize meaningful `MonoBehaviour`, `ScriptableObject`, custom inspectors/attributes that change runtime setup, and reusable Prefab components. Trace `Awake`, `OnEnable`, `Start`, `Update`, `OnDisable`, and `OnDestroy` only when relevant.
+
+For Cocos Creator, prioritize `@ccclass` Components, `@property` bindings, Node/Prefab ownership, and `onLoad`, `onEnable`, `start`, `update`, `onDisable`, and `onDestroy` only when relevant.
+
+Do not describe a component as reusable merely because it is public. Verify actual attachment or call sites. If serialized ownership cannot be proven from text, say so.
+
+### 5. Trace One Core Gameplay Flow
+
+Choose one flow that best connects the game's Scenes, systems, and components. Prefer the core loop or a representative action such as entering battle, spawning a player, casting a skill, playing a card, opening an inventory, or creating a pooled projectile when that flow actually exists.
 
 Trace:
 
-- the user, engine, or message entry;
-- controller/system/component orchestration;
-- data, network, resource, event, or scene dependencies actually involved;
-- visible result and error path when present;
-- lifecycle, registration, ownership, and cleanup rules that affect changes.
+`Scene/Engine Event -> Root Controller or Component -> Game System -> Data/Resource/Event -> Gameplay or UI Result`
 
-Show a compact call chain or sequence diagram and cite one real usage example. Never invent missing callers, serialized wiring, or runtime order.
+Use real project symbols and cite the important files. Keep the flow compact; its purpose is to show how framework code and script components cooperate.
 
-### 4. Extract Development Conventions
+### 6. Recommend a Game-Code Reading Order
 
-Read two or three nearby, representative implementations instead of searching the whole repository. Derive only conventions needed for the next change:
+Recommend a short reading path centered on runtime understanding:
 
-- where a new or changed feature is registered and initialized;
-- how dependencies are obtained;
-- how async work, errors, events, and lifecycle cleanup are handled;
-- how UI, assets, scenes, protocols, or configuration are named and referenced;
-- which files are generated and what source or generator owns them;
-- where tests or practical verification live.
+1. Scene list and Scene transition controller.
+2. Persistent bootstrap/framework root.
+3. Core systems used across Scenes.
+4. Important reusable script components.
+5. One representative gameplay feature from entry to result.
 
-Distinguish a repeated convention from a one-off example. Do not turn stylistic observations into mandatory rules without evidence.
-
-### 5. Prepare the First Development Move
-
-If a concrete task is known, identify likely change points, an implementation order, adjacent examples to copy, and the smallest relevant verification. Treat these as a task map, not permission to edit.
-
-If no task is known, provide a development-ready reading order and explain what each file unlocks. Do not manufacture a feature request merely to complete the report.
+Name concrete files and explain what each unlocks. Do not order files by directory alone.
 
 ## Evidence Rules
 
-Attach `relative/path:line` to important claims when line information is available, otherwise use `relative/path`. Prefer a few strong citations over a wall of references.
+Attach `relative/path:line` to important claims when available, otherwise use `relative/path`. Prefer a few decisive citations.
 
-Use these labels when uncertainty affects the next action:
+Use:
 
-- `CONFIRMED`: directly supported by code or configuration.
-- `INFERRED`: supported by multiple clues; explain the inference.
-- `UNKNOWN / NEED VERIFICATION`: unavailable from the repository evidence.
-- `UNKNOWN / NEED EDITOR INSPECTION`: serialized or editor-only state cannot be resolved safely from text.
+- `CONFIRMED` for direct code, configuration, or serialized-asset evidence;
+- `INFERRED` for conclusions supported by multiple clues;
+- `UNKNOWN / NEED VERIFICATION` when repository evidence is insufficient;
+- `UNKNOWN / NEED EDITOR INSPECTION` for unresolved engine-editor or serialized relationships.
 
-Treat README text, names, comments, and directory structure as leads until code or configuration confirms them. Distinguish installed dependencies from dependencies actually used by the runtime.
+Treat names, folders, README statements, installed packages, and comments as leads until runtime code, configuration, or assets confirm their role.
 
 ## Default Output
 
 ```markdown
-# Project Onboarding Brief
+# Game Client Project Guide
 
-## 1. Start Here
-Explain what the project is, its engine/version, whether the available evidence is sufficient, and the first file to open.
+## 1. Game Summary
+State engine/version, 2D/3D/hybrid, genre, core gameplay loop, and other defining traits. Mark inferred traits.
 
-## 2. Open, Run, and Verify
-List confirmed tool versions and commands. Separate documented commands from inferred ones and name blockers without guessing secrets or missing assets.
+### Plugins and Frameworks
+| Plugin | Role in This Game | Initialized/Configured At | Used By | Evidence |
 
-## 3. Minimal Mental Model
-Show one compact Mermaid diagram and a 3–6 row module table:
-| Module | Responsibility | Entry | Depends On |
+## 2. Scene Map
+Show one Mermaid Scene flow.
+| Scene | Purpose | Root Scripts/Components | Entered From | Leads To | Persistent Dependencies |
 
-## 4. Essential Files
-Give a dependency-aware reading order of roughly 5–10 files. Explain in one sentence what each file unlocks.
+## 3. Game-System Framework
+Show one compact system relationship diagram.
+| System | Responsibility | Owner/Initialization | Main Users | Frequently Used Methods |
+Expand important systems with lifecycle and usage rules. Detail UI, pool, FSM, resource, Scene, or event APIs when present.
 
-## 5. One Feature, End to End
-Trace one real feature with a compact call chain or sequence diagram, key files, lifecycle constraints, and a real usage example.
+## 4. Important Script Components
+| Component | Attached/Owned By | What It Does | Use When | Common Methods |
+Explain configuration, dependencies, lifecycle, and one real usage example for the most useful components.
 
-## 6. How to Make the First Change
-For a known task, list likely change points, an adjacent example, implementation order, and verification. Without a task, summarize project conventions that make the next ticket easier.
+## 5. One Core Gameplay Flow
+Show a compact call chain or sequence diagram connecting a Scene, systems, and components.
 
-## 7. Unknowns and Blockers
-List only uncertainties that affect running the project or making the first change, plus the cheapest next verification.
+## 6. Recommended Reading Order
+List concrete Scene, framework, system, component, and gameplay files in dependency-aware order.
+
+## 7. Unknown / Needs Editor Inspection
+List only uncertainties that materially affect the Scene, system, or component mental model.
 ```
 
-Keep the report proportional. For a small repository, a few paragraphs may be enough. For a task-specific request, omit unrelated modules and make the target feature the center of the map.
-
-## Stop Conditions
-
-Stop exploring when the run/build path, critical spine, essential files, one feature path, and next development move are clear enough to act on. Do not keep reading merely to make the report look comprehensive.
-
-Before responding, verify that every section reduces time-to-first-change, important claims have evidence, unknowns are explicit, and no analysis-only request has been treated as permission to modify code.
+Keep the guide proportional to the project. Prefer framework and component knowledge over exhaustive file coverage. Stop when the developer understands the Scene graph, central systems, commonly used APIs, reusable components, and one representative gameplay path.

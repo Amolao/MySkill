@@ -1,4 +1,4 @@
 interface:
-  display_name: "游戏客户端项目快速上手"
-  short_description: "快速跑通陌生游戏客户端项目，建立心智模型并定位首个开发任务"
-  default_prompt: "使用 $game-client-project-analysis 帮我快速跑通并理解这个陌生游戏客户端项目，找出关键文件、真实功能链和首个开发任务的切入点。"
+  display_name: "游戏客户端项目熟悉"
+  short_description: "快速理解游戏类型、Scene关系、系统框架及常用脚本组件的真实用法"
+  default_prompt: "使用 $game-client-project-analysis 分析这个游戏客户端项目的类型、插件、Scene关系、系统框架、常用API与重要脚本组件。"
