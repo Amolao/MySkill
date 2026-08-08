@@ -1,4 +1,4 @@
 interface:
   display_name: "游戏客户端项目熟悉"
-  short_description: "快速理解游戏类型、Scene关系、系统框架及常用脚本组件的真实用法"
+  short_description: "快速理解游戏类型、系统框架及常用脚本组件的真实用法,带你快速上手陌生游戏项目"
   default_prompt: "使用 $game-client-project-analysis 分析这个游戏客户端项目的类型、插件、Scene关系、系统框架、常用API与重要脚本组件。"
