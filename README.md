@@ -1,13 +1,8 @@
 ```mermaid
 flowchart LR
     %% 左侧分支
-    A[ChatGPT 网络排障] --> A1[SKILL.md<br/>诊断流程与安全原则]
-    A --> A2[references<br/>OpenAI 网络基线]
-    A --> A3[scripts<br/>PowerShell / Shell 脚本]
-
-    B[游戏客户端项目分析] --> B1[SKILL.md<br/>英文分析指南]
-    B --> B2[技能（中文版）.md<br/>中文分析指南]
-    B --> B3[agents/openai.yaml<br/>Agent 配置]
+    A[ChatGPT 网络排障 Skill<br/>用于诊断 ChatGPT 网页端和桌面端的网络故障]
+    B[游戏客户端项目分析 Skill<br/>用于快速理解陌生游戏客户端项目的架构与运行流程]
 
     A --> R((AI 辅助开发资料库))
     B --> R
@@ -32,5 +27,5 @@ flowchart LR
 
     class R root;
     class A,B,C,D branch;
-    class A1,A2,A3,B1,B2,B3,C1,C2,C3,C4,C5,D1,D2,D3,D4 item;
+    class C1,C2,C3,C4,C5,D1,D2,D3,D4 item;
 ```
