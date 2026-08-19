@@ -11,6 +11,47 @@
 | `prompt/` | 记录简单、可复用的 AI 提示词及其适用场景。 |
 | `游戏客户端-AI输出代码规范.md` | 游戏客户端项目的 AI 代码生成规范模板，包含项目背景、指令优先级和命名约定。 |
 
+## 项目思维导图
+
+```mermaid
+mindmap
+  root((AI 辅助开发资料库))
+    ChatGPT 网络排障
+      chatgpt-network-troubleshooter
+        SKILL.md：诊断流程与安全原则
+        references
+          openai-domains.md：域名、WebSocket、TLS 基线
+        scripts
+          Windows PowerShell 脚本
+          macOS/Linux Shell 脚本
+        README.md：功能与使用说明
+    游戏客户端项目分析
+      game-client-project-analysis
+        SKILL.md：英文分析指南
+        技能（中文版）.md：中文分析指南
+        agents
+          openai.yaml：Agent 配置
+        分析内容
+          游戏类型与引擎
+          Scene 关系
+          游戏系统
+          可复用组件
+          核心 Gameplay 流程
+    AI 提示词
+      prompt
+        需求澄清
+        方案评审
+        游戏客户端教学
+        最小改动
+        HTML 输出
+    游戏客户端代码规范
+      游戏客户端-AI输出代码规范.md
+        项目背景
+        指令优先级
+        C# 命名规范
+        事件注册与取消注册
+```
+
 ## 文件目录
 
 ```text
