@@ -1,3 +1,6 @@
+常用提示词：https://github.com/Amolao/MySkill/tree/main/prompt
+
+
 ```mermaid
 flowchart LR
     %% 左侧分支
