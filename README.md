@@ -31,5 +31,5 @@ flowchart LR
 
     class R root;
     class A,B,C,D branch;
-    class C1,C2,C3,C4,C5,D1,D2,D3,D4 item;
+    class C1,C2,C3,C4,C5,C6,D1,D2,D3,D4 item;
 ```
