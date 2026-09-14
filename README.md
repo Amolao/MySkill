@@ -18,6 +18,7 @@ flowchart LR
     C --> C4[最小改动]
     C --> C5[HTML 输出]
     C --> C6[不直接进行编辑器操作]
+    C --> C7[不要更改项目文件]
 
     R --> D[游戏客户端代码规范]
     D --> D1[项目背景]
@@ -31,5 +32,5 @@ flowchart LR
 
     class R root;
     class A,B,C,D branch;
-    class C1,C2,C3,C4,C5,C6,D1,D2,D3,D4 item;
+    class C1,C2,C3,C4,C5,C6,C7,D1,D2,D3,D4 item;
 ```
