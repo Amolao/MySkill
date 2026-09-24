@@ -1,0 +1,17 @@
+interface:
+  display_name: unity builtin to urp shader
+  short_description: Convert custom Unity Built-in Render Pipeline shaders to URP
+    HLSL while preserving material properties and visual behavior. Use when a user
+    provides .shader/.cginc/.hlsl code or a Unity project and asks to migrate custom
+    shaders, Surface Shaders, lighting, shadows, GrabPass effects, transparent shaders,
+    stencil/multi-pass shaders, or related Built-in rendering code to the Universal
+    Render Pipeline.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
