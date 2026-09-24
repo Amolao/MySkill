@@ -6,11 +6,11 @@ flowchart LR
     %% 左侧分支
     A[ChatGPT 网络排障 Skill<br/>用于诊断 ChatGPT 网页端和桌面端的网络故障]
     B[游戏客户端项目分析 Skill<br/>用于快速理解陌生游戏客户端项目的架构与运行流程]
-    C[默认管线Shader转为upr管线Shader]
+    E[默认管线Shader转为upr管线Shader]
 
     A --> R((AI 辅助开发资料库))
     B --> R
-    C --> R
+    E --> R
 
     %% 右侧分支
     R --> C[AI 提示词]
@@ -33,6 +33,6 @@ flowchart LR
     classDef item fill:#eff6ff,color:#1e3a8a,stroke:#93c5fd;
 
     class R root;
-    class A,B,C,D branch;
+    class A,B,C,D,E branch;
     class C1,C2,C3,C4,C5,C6,C7,D1,D2,D3,D4 item;
 ```
