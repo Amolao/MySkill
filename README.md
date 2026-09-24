@@ -6,7 +6,7 @@ flowchart LR
     %% 左侧分支
     A[ChatGPT 网络排障 Skill<br/>用于诊断 ChatGPT 网页端和桌面端的网络故障]
     B[游戏客户端项目分析 Skill<br/>用于快速理解陌生游戏客户端项目的架构与运行流程]
-    E[默认管线Shader转为upr管线Shader]
+    E[默认管线Shader转为urp管线Shader]
 
     A --> R((AI 辅助开发资料库))
     B --> R
